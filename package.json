@@ -1,18 +1,16 @@
 {
-  "name": "log_pointer",
+  "name": "fancy-logger",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/bundle.js",
   "scripts": {
     "build": "node esbuild.js"
   },
-  "keywords": [],
+  "keywords": ["埋点","logger","log"],
+  "files": ["lib"],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "esbuild": "0.17.19"
-  },
   "devDependencies": {
-    "typescript": "^5.0.4"
+    "esbuild": "0.17.19"
   }
 }

@@ -1,4 +1,4 @@
-import { type IDefaultOptions, type IUserOptions, ELogger } from '../type/index'
+import { type IDefaultOptions, type IUserOptions, type TDomLoggerTargetKey, ELogger } from '../type/index'
 import { createHistoryEvent } from '../utils'
 
 class PointsLogger {
@@ -15,7 +15,6 @@ class PointsLogger {
         return <IDefaultOptions>{
             historyLogger: false,
             hashLogger: false,
-            domLogger: false,
             jsErrorLogger: false,
             SDKVersion: ELogger.version,
             payload: {}
@@ -41,32 +40,59 @@ class PointsLogger {
     private setUserId<T extends IDefaultOptions['id']>(id: T) {
         this.options.id = id
     }
-    private errorListerner() {
+    private installErrorListerner(jsErrorTargetKet?: string, promiseErrorTargetKet?: string) {
         window.addEventListener('error', (e) => {
-            console.log('jserror');
             this.reportTracker({
                 event: 'js_error',
-                targetKey: 'JSerror',
-                message: e.message
+                targetKey: jsErrorTargetKet || 'JSerror',
+                errorInfo: {
+                    message: e.message,
+                    lineno: e.lineno,
+                    scriptURI: e.filename,
+                    type: e.type
+                }
             })
         })
+        window.onerror = function (errorMessage, scriptURI, lineNumber, columnNumber) {
+            console.error(`Error: ${errorMessage} at ${scriptURI}:${lineNumber}:${columnNumber}`);
+        };
         window.addEventListener('unhandledrejection', (e) => {
-            console.log('promiseerror');
             e.promise.catch(err => {
                 this.reportTracker({
-                    event: 'promise_error',
-                    targetKey: 'unhandledrejection',
-                    message: err
+                    event: 'promise_unhandledrejectio',
+                    targetKey: promiseErrorTargetKet || 'unhandledrejection',
+                    errorInfo: {
+                        type: e.reason
+                    }
                 })
             })
-
         })
     }
+    public installDomLogger<T>(el: HTMLElement, event: Array<keyof HTMLElementEventMap>, targetKey: TDomLoggerTargetKey, payload: T): void {
+        event.forEach(eventKey => {
+            el.addEventListener(eventKey, () => {
+                if (typeof targetKey === 'string') {
+                    this.reportTracker({
+                        event: eventKey,
+                        targetKey: targetKey,
+                        payload
+                    })
+                } else {
+                    this.reportTracker({
+                        event: eventKey,
+                        targetKey: targetKey[eventKey],
+                        payload
+                    })
+                }
+
+            })
+        })
+
+    }
     private installLogger() {
-        // 
-        this.options.historyLogger && this.instanllListerner(['pushState', 'replaceState', 'popState'], 'historyLogger',)
-        this.options.hashLogger && this.instanllListerner(['hashchange'], 'hashLogger')
-        this.options.jsErrorLogger && this.errorListerner()
+        this.options.historyLogger && this.instanllListerner(['pushState', 'replaceState', 'popState'], this.options.historyTargetK || 'historyLogger')
+        this.options.hashLogger && this.instanllListerner(['hashchange'], this.options.hashTargetKet || 'hashLogger')
+        this.options.jsErrorLogger && this.installErrorListerner()
     }
     private reportTracker<T>(payload: T): void {
         // string blob  不支持json payload

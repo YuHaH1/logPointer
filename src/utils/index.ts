@@ -12,6 +12,4 @@ const createHistoryEvent = <T extends keyof History>(type: T) => {
     }
 }
 
-
-
 export { createHistoryEvent }

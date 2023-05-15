@@ -4,7 +4,6 @@ const enum ELogger {
 interface IDefaultOptions {
     requestUrl: string,
     id?: string,
-    domLogger: boolean,
     hashLogger: boolean,
     jsErrorLogger: boolean,
     historyLogger: boolean,
@@ -13,6 +12,16 @@ interface IDefaultOptions {
 }
 interface IUserOptions extends Partial<IDefaultOptions> {
     requestUrl: string,
+    jsErrorTargetKet?: string,
+    promiseErrorTargetKet?: string,
+    hashTargetKet?: string
+    historyTargetK?: string
 }
 
-export { IDefaultOptions, ELogger, IUserOptions }
+type TDomLoggerTargetKey = {
+    [K in keyof HTMLElementEventMap as string]: string
+} | string;
+
+
+
+export { IDefaultOptions, ELogger, IUserOptions, TDomLoggerTargetKey }

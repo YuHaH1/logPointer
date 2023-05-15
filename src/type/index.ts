@@ -1,6 +1,4 @@
-const enum ELogger {
-    version = '1.0.0'
-}
+
 interface IDefaultOptions {
     requestUrl: string,
     id?: string,
@@ -22,6 +20,8 @@ type TDomLoggerTargetKey = {
     [K in keyof HTMLElementEventMap as string]: string
 } | string;
 
+declare interface window {
+    VERSION: string;
+}
 
-
-export { IDefaultOptions, ELogger, IUserOptions, TDomLoggerTargetKey }
+export { IDefaultOptions, IUserOptions, TDomLoggerTargetKey }

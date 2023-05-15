@@ -1,6 +1,6 @@
-import { type IDefaultOptions, type IUserOptions, type TDomLoggerTargetKey, ELogger } from '../type/index'
+import { type IDefaultOptions, type IUserOptions, type TDomLoggerTargetKey } from '../type/index'
 import { createHistoryEvent } from '../utils'
-
+declare const VERSION: string
 class PointsLogger {
     options: IUserOptions
     constructor(options: IUserOptions) {
@@ -16,7 +16,7 @@ class PointsLogger {
             historyLogger: false,
             hashLogger: false,
             jsErrorLogger: false,
-            SDKVersion: ELogger.version,
+            SDKVersion: VERSION,
             payload: {}
         }
     }

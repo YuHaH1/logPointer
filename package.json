@@ -1,8 +1,8 @@
 {
   "name": "fancy-logger",
   "version": "1.0.0",
-  "description": "",
-  "main": "./lib/bundle.js",
+  "description": "SDK_POINT_LOGGER",
+  "module": "./lib/bundle.js",
   "scripts": {
     "build": "node esbuild.js"
   },

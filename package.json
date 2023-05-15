@@ -1,5 +1,5 @@
 {
-  "name": "fancy-logger",
+  "name": "fancyyu-logger",
   "version": "1.0.0",
   "description": "SDK_POINT_LOGGER",
   "module": "./lib/bundle.js",
